@@ -66,7 +66,7 @@ export const addItemToCart = async (req: Request, res: Response) => {
 };
 
 export const updateProductStatusInCart = async (req: Request, res: Response) => {
-    const { userId, items, paymentRef } = req.body;
+    const { userId, items, paymentRef, mop } = req.body;
     
     if (!userId || !items || !Array.isArray(items)) {
         return res.status(400).json({ message: 'Missing required fields or items is not an array' });
@@ -86,6 +86,7 @@ export const updateProductStatusInCart = async (req: Request, res: Response) => 
                 // Update status and paymentRef
                 item.status = "toship";
                 item.paymentRef = paymentRef;
+                item.mop = mop;
                 
                 // Update product stocks
                 const product = await ProductsModel.findById(item.product);
