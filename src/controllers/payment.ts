@@ -1,29 +1,6 @@
 import { Request, Response } from 'express';
-import Stripe from 'stripe';
 import { ProductsModel } from '../db/products';
 import { CartsModel } from '../db/carts';
-
-export const makePayment = async (req: Request, res: Response) => {
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-        apiVersion: '2024-06-20',
-    });
-
-    const { amount } = req.body;
-
-    try {
-        const paymentIntent = await stripe.paymentIntents.create({
-            amount: amount * 100,
-            currency: 'php',
-            automatic_payment_methods: {
-                enabled: true,
-            },
-        });
-        
-        return res.status(200).json({paymentIntent: paymentIntent.client_secret, paymentRef: paymentIntent.id});
-    } catch (error) {
-        return res.status(400).json({error: error});
-    }
-}
 
 export const buySingleProduct = async (req: Request, res: Response) => {
     const { userId, productId, quantity, paymentRef } = req.body;
